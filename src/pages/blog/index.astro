@@ -1,0 +1,51 @@
+---
+import BlogCard from '@/components/BlogCard.astro';
+import SearchBox from '@/components/SearchBox.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getVisiblePosts } from '@/utils/posts';
+import { getCollection } from 'astro:content';
+
+const posts = getVisiblePosts(await getCollection('blog'));
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
+---
+
+<BaseLayout
+  title="Blog | Bachapin Blog"
+  description="All posts from Bachapin Blog, sorted by publication date."
+>
+  <section class="px-6 py-16 sm:px-8 sm:py-20">
+    <div class="max-w-prose">
+      <p class="font-mono text-sm text-accent">Archive</p>
+      <h1 class="mt-5 text-[2.5rem] font-semibold leading-tight text-text">All posts</h1>
+      <p class="mt-6 text-lg leading-8 text-muted">
+        Browse essays, implementation notes, and technical field reports. Posts are sorted by
+        publish date, newest first.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-t border-divider px-6 py-8 sm:px-8">
+    <SearchBox />
+  </section>
+
+  {tags.length > 0 && (
+    <section class="border-t border-divider px-6 py-6 sm:px-8">
+      <div class="flex flex-wrap gap-2" aria-label="Available tags">
+        {tags.map((tag) => (
+          <a
+            href={`/blog?tag=${encodeURIComponent(tag)}`}
+            class="border border-divider px-3 py-1 font-mono text-sm text-muted hover:border-accent hover:text-accent"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="border-t border-divider px-6 py-12 sm:px-8">
+    <div class="grid gap-4">
+      {posts.map((post) => <BlogCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

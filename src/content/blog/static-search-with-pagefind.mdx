@@ -1,0 +1,38 @@
+---
+title: "Static Search with Pagefind"
+description: "How a static blog can add useful search without running a backend service."
+pubDate: 2026-04-24
+tags: ["search", "ssg", "pagefind"]
+draft: false
+image: "/images/og-default.svg"
+---
+
+Search is useful on a blog once the archive starts to grow, but it should not require a
+server unless the content demands it.
+
+Pagefind indexes the generated HTML after Astro builds the site. The result is a small set
+of static files that can be served alongside the rest of the site.
+
+## Why this works
+
+Static search keeps deployment simple:
+
+- No database.
+- No hosted search service.
+- No private content pipeline.
+- No runtime API to secure.
+
+For a single-developer blog, that tradeoff is usually excellent. The search index is rebuilt
+whenever the site is rebuilt, which means the published search results match the published
+pages.
+
+## The build step
+
+This boilerplate runs Pagefind after the Astro build:
+
+```bash
+npm run build
+```
+
+The generated files live in `dist/pagefind`, and the blog archive loads the Pagefind UI from
+that static bundle.

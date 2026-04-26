@@ -1,0 +1,31 @@
+---
+import NewsletterSignup from '@/components/NewsletterSignup.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About | Bachapin Blog"
+  description="About the Bachapin Blog and its content-first approach to technical writing."
+>
+  <section class="px-6 py-16 sm:px-8 sm:py-20">
+    <div class="prose-content">
+      <p class="font-mono text-sm text-accent">About</p>
+      <h1 class="mt-5 text-[2.5rem] font-semibold leading-tight text-text">A small place for careful notes.</h1>
+      <p class="mt-6 text-lg leading-8 text-muted">
+        This blog is designed for one developer publishing practical, durable writing without
+        fighting the toolchain. Markdown and MDX keep the content portable. Astro keeps the
+        pages fast. Tailwind keeps the design consistent without ceremony.
+      </p>
+      <h2>Principles</h2>
+      <ul>
+        <li>Write first, decorate second.</li>
+        <li>Keep dependencies obvious and useful.</li>
+        <li>Favor static output until dynamic behavior has earned its place.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="border-t border-divider px-6 py-12 sm:px-8">
+    <NewsletterSignup />
+  </section>
+</BaseLayout>

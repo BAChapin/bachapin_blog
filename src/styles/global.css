@@ -1,0 +1,126 @@
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    background: #0D0D0D;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0D0D0D;
+    color: #EAEAEA;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    line-height: 1.7;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  a:hover {
+    color: #00FF9C;
+  }
+
+  :focus-visible {
+    outline: 2px solid #00FF9C;
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: rgba(0, 255, 156, 0.24);
+    color: #EAEAEA;
+  }
+}
+
+@layer components {
+  .prose-content {
+    max-width: 65ch;
+    color: #D8D8D8;
+  }
+
+  .prose-content h2 {
+    margin-top: 48px;
+    margin-bottom: 16px;
+    color: #EAEAEA;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .prose-content h3 {
+    margin-top: 32px;
+    margin-bottom: 8px;
+    color: #EAEAEA;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .prose-content p,
+  .prose-content ul,
+  .prose-content ol,
+  .prose-content blockquote,
+  .prose-content pre {
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+
+  .prose-content ul,
+  .prose-content ol {
+    padding-left: 24px;
+  }
+
+  .prose-content li + li {
+    margin-top: 8px;
+  }
+
+  .prose-content a {
+    border-bottom: 1px solid #1F1F1F;
+    color: #EAEAEA;
+  }
+
+  .prose-content a:hover {
+    border-color: #00FF9C;
+    color: #00FF9C;
+  }
+
+  .prose-content blockquote {
+    border-left: 1px solid #00FF9C;
+    color: #BDBDBD;
+    padding-left: 16px;
+  }
+
+  .prose-content code {
+    border: 1px solid #1F1F1F;
+    border-radius: 4px;
+    background: #111111;
+    color: #EAEAEA;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    padding: 2px 6px;
+  }
+
+  .prose-content pre {
+    overflow-x: auto;
+    border: 1px solid #1F1F1F;
+    border-radius: 8px;
+    background: #111111;
+    padding: 16px;
+  }
+
+  .prose-content pre code {
+    border: 0;
+    background: transparent;
+    padding: 0;
+  }
+}

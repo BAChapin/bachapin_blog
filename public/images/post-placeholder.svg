@@ -1,0 +1,11 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Post placeholder image</title>
+  <desc id="desc">A minimal dark placeholder image for blog posts.</desc>
+  <rect width="1200" height="800" fill="#0D0D0D"/>
+  <rect x="120" y="120" width="960" height="560" fill="#111111" stroke="#1F1F1F"/>
+  <path d="M192 256H560" stroke="#00FF9C" stroke-width="3"/>
+  <path d="M192 336H840" stroke="#1F1F1F" stroke-width="3"/>
+  <path d="M192 400H760" stroke="#1F1F1F" stroke-width="3"/>
+  <path d="M192 464H920" stroke="#1F1F1F" stroke-width="3"/>
+  <text x="192" y="576" fill="#888888" font-family="ui-monospace, Menlo, monospace" font-size="28">placeholder image</text>
+</svg>
