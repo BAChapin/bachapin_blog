@@ -1,6 +1,46 @@
 @import "tailwindcss";
 @config "../../tailwind.config.js";
 
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("/fonts/ibm-plex-serif/IBMPlexSerif-Regular.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("/fonts/ibm-plex-serif/IBMPlexSerif-Italic.ttf") format("truetype");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("/fonts/ibm-plex-serif/IBMPlexSerif-Medium.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("/fonts/ibm-plex-serif/IBMPlexSerif-SemiBold.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("/fonts/ibm-plex-serif/IBMPlexSerif-Bold.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+
 @layer base {
   :root {
     color-scheme: dark;
@@ -19,6 +59,12 @@
     font-family: "Inter", system-ui, -apple-system, sans-serif;
     line-height: 1.7;
     text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "IBM Plex Serif", Georgia, serif;
   }
 
   a {
