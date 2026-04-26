@@ -1,18 +1,21 @@
 ---
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
+import UmamiAnalytics from '@/components/UmamiAnalytics.astro';
 import '@/styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  ogType?: 'website' | 'article';
 }
 
 const {
   title = 'Bachapin Blog',
   description = 'A quiet, technical blog about building thoughtful software.',
   image = '/images/og-default.svg',
+  ogType = 'website',
 } = Astro.props;
 
 const site = Astro.site ?? new URL('https://example.com');
@@ -31,7 +34,7 @@ const absoluteImage = new URL(image, site);
     <link rel="canonical" href={canonical} />
     <link rel="alternate" type="application/rss+xml" title="Bachapin Blog RSS" href="/rss.xml" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -41,6 +44,7 @@ const absoluteImage = new URL(image, site);
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={absoluteImage} />
+    <UmamiAnalytics />
   </head>
   <body>
     <div class="min-h-screen border-x border-divider/70 bg-ink mx-auto max-w-wide">

@@ -11,20 +11,21 @@ const posts = getVisiblePosts(await getCollection('blog')).slice(0, 3);
 <BaseLayout>
   <section class="px-6 py-16 sm:px-8 sm:py-24">
     <div class="max-w-prose">
-      <p class="font-mono text-sm text-accent">content-first / minimal / fast</p>
+      <p class="font-mono text-sm text-accent">Brett Chapin / technical notes</p>
       <h1 class="mt-5 text-[2.5rem] font-semibold leading-tight text-text">
-        A quiet technical blog for durable software notes.
+        Building durable software, one careful decision at a time.
       </h1>
       <p class="mt-6 text-lg leading-8 text-muted">
-        Essays, build logs, and practical notes on software architecture, developer workflow,
-        and the small decisions that compound into maintainable systems.
+        A personal technical blog about software engineering, iOS development, developer
+        workflows, systems thinking, side projects, and the small engineering decisions that
+        compound over time.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="/blog" class="border border-divider px-4 py-2 font-mono text-sm hover:border-accent hover:text-accent">
           Read the blog
         </a>
         <a href="/about" class="border border-divider px-4 py-2 font-mono text-sm hover:border-accent hover:text-accent">
-          About
+          About me
         </a>
       </div>
     </div>
@@ -33,7 +34,7 @@ const posts = getVisiblePosts(await getCollection('blog')).slice(0, 3);
   <section class="border-t border-divider px-6 py-12 sm:px-8">
     <div class="flex items-end justify-between gap-6">
       <div>
-        <p class="font-mono text-sm text-muted">Latest</p>
+        <p class="font-mono text-sm text-muted">Latest notes</p>
         <h2 class="mt-2 text-3xl font-semibold text-text">Recent posts</h2>
       </div>
       <a href="/blog" class="font-mono text-sm text-muted hover:text-accent">View all</a>

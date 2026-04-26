@@ -5,7 +5,7 @@ content-first, static, fast, and intentionally small.
 
 ## Stack
 
-- Astro 5 with static site generation
+- Astro 6 with static site generation
 - MDX blog posts
 - Astro Content Collections
 - Tailwind CSS
@@ -80,25 +80,134 @@ npm run preview
 The build command runs Astro first, then Pagefind indexes the generated `dist` directory.
 Search UI assets are emitted to `dist/pagefind`.
 
-## Create a Blog Post
+## Blog Article Workflow
 
-Add a new `.mdx` file under `src/content/blog`.
+Blog articles live in `src/content/blog` as Markdown or MDX files. The file name becomes
+the public URL slug.
+
+For example:
+
+```txt
+src/content/blog/swiftui-navigation-notes.mdx
+```
+
+Builds to:
+
+```txt
+/blog/swiftui-navigation-notes/
+```
+
+### 1. Create the MDX File
+
+Create a new `.mdx` file under `src/content/blog` using a short, lowercase, hyphenated
+file name.
+
+Good examples:
+
+```txt
+ios-debugging-workflow.mdx
+swiftui-state-notes.mdx
+ai-assisted-refactoring.mdx
+```
+
+### 2. Add Frontmatter
+
+Every article needs frontmatter that matches the Content Collection schema in
+`src/content.config.ts`.
 
 ```mdx
 ---
-title: "My New Post"
-description: "A clear one-sentence summary for SEO and listings."
+title: "SwiftUI State Notes"
+description: "A practical note on keeping SwiftUI state predictable in small apps."
 pubDate: 2026-04-26
-tags: ["astro", "notes"]
+updatedDate: 2026-04-27
+tags: ["ios", "swiftui", "workflow"]
 draft: false
 image: "/images/og-default.svg"
 ---
 
-Write your post here.
+Write the article here.
 ```
 
-Set `draft: true` to preview a post locally while excluding it from production builds,
-RSS, and post listings.
+Required fields:
+
+- `title`: shown on the article page, cards, RSS, and SEO tags
+- `description`: short summary for cards, meta description, RSS, and Open Graph
+- `pubDate`: publish date used for sorting
+- `draft`: set to `true` while working
+
+Optional fields:
+
+- `updatedDate`: shown on the post if the article has been revised
+- `tags`: used on cards, article pages, and Umami tag analytics
+- `image`: Open Graph image path
+
+### 3. Draft Locally
+
+Use drafts while writing:
+
+```mdx
+draft: true
+```
+
+Draft posts are visible in development so you can preview them locally, but they are
+excluded from production builds, RSS, and public listings.
+
+Start the dev server:
+
+```bash
+npm run dev
+```
+
+Then open the article at:
+
+```txt
+http://localhost:4321/blog/your-file-name/
+```
+
+### 4. Publish the Article
+
+When the article is ready:
+
+```mdx
+draft: false
+```
+
+Then verify the production build:
+
+```bash
+npm run build
+```
+
+The build will:
+
+- Generate the article page
+- Update the blog listing
+- Update RSS
+- Update the sitemap
+- Rebuild the Pagefind search index
+
+### 5. Deploy
+
+Commit the new article and deploy the generated site using your normal deployment flow.
+
+If using the Docker infra in `infra/`, build the site and copy the static output into
+the NGINX static directory:
+
+```bash
+npm run build
+cp -R dist/. infra/data/
+```
+
+### Article Checklist
+
+- [ ] File name is lowercase and hyphenated
+- [ ] `title` is clear and specific
+- [ ] `description` is useful as a search/social summary
+- [ ] `pubDate` is correct
+- [ ] Tags are lowercase and consistent with previous posts
+- [ ] `draft` is `false` before publishing
+- [ ] `npm run build` passes
 
 ## Environment
 

@@ -9,9 +9,15 @@ interface Props {
 
 const { post, readingTime } = Astro.props;
 const { title, description, pubDate, updatedDate, tags, image } = post.data;
+const slug = getPostSlug(post);
+const analyticsPayload = {
+  slug,
+  title,
+  tags,
+};
 ---
 
-<BaseLayout title={`${title} | Bachapin Blog`} description={description} image={image}>
+<BaseLayout title={`${title} | Bachapin Blog`} description={description} image={image} ogType="article">
   <article class="px-6 py-16 sm:px-8 sm:py-20" data-pagefind-body>
     <header class="mx-auto max-w-prose border-b border-divider pb-10">
       <a href="/blog" class="font-mono text-sm text-muted hover:text-accent">/blog</a>
@@ -52,4 +58,37 @@ const { title, description, pubDate, updatedDate, tags, image } = post.data;
       </a>
     </footer>
   </article>
+
+  <script
+    is:inline
+    data-blog-analytics={JSON.stringify(analyticsPayload)}
+  >
+    // Umami tracks page views automatically. These custom events add article and tag context.
+    const blogAnalyticsScript = document.currentScript;
+
+    window.addEventListener('load', () => {
+      if (!window.umami || !window.umami.track) return;
+
+      let payload;
+      try {
+        payload = JSON.parse(blogAnalyticsScript?.dataset.blogAnalytics ?? '{}');
+      } catch {
+        return;
+      }
+
+      const eventKey = `blog_post_view:${payload.slug}`;
+
+      window.__blogAnalyticsTracked = window.__blogAnalyticsTracked || new Set();
+      if (window.__blogAnalyticsTracked.has(eventKey)) return;
+      window.__blogAnalyticsTracked.add(eventKey);
+
+      window.umami.track('blog_post_view', payload);
+
+      if (Array.isArray(payload.tags)) {
+        payload.tags.forEach((tag) => {
+          window.umami.track(`blog_tag_view:${tag}`);
+        });
+      }
+    });
+  </script>
 </BaseLayout>
