@@ -2,14 +2,14 @@
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'About' },
+  { href: '/about/#about-me', label: 'About' },
 ];
 ---
 
 <header class="border-b border-divider px-6 py-5 sm:px-8">
   <nav class="flex items-center justify-between gap-6" aria-label="Primary navigation">
     <a href="/" class="font-mono text-sm tracking-normal text-text hover:text-accent">
-      bachapin.dev
+      bachapin.me
     </a>
     <div class="flex items-center gap-4 font-mono text-sm text-muted">
       {navItems.map((item) => (

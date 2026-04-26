@@ -5,23 +5,107 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
 <BaseLayout
   title="About | Bachapin Blog"
-  description="About the Bachapin Blog and its content-first approach to technical writing."
+  description="About Brett Chapin, a software engineer writing about software, faith, homesteading, learning, and durable work."
 >
-  <section class="px-6 py-16 sm:px-8 sm:py-20">
-    <div class="prose-content">
-      <p class="font-mono text-sm text-accent">About</p>
-      <h1 class="mt-5 text-[2.5rem] font-semibold leading-tight text-text">A small place for careful notes.</h1>
-      <p class="mt-6 text-lg leading-8 text-muted">
-        This blog is designed for one developer publishing practical, durable writing without
-        fighting the toolchain. Markdown and MDX keep the content portable. Astro keeps the
-        pages fast. Tailwind keeps the design consistent without ceremony.
-      </p>
-      <h2>Principles</h2>
-      <ul>
-        <li>Write first, decorate second.</li>
-        <li>Keep dependencies obvious and useful.</li>
-        <li>Favor static output until dynamic behavior has earned its place.</li>
-      </ul>
+  <section id="about-me" class="px-6 py-16 sm:px-8 sm:py-20">
+    <div class="grid gap-10 md:grid-cols-[240px_1fr] md:items-start">
+      <div class="border border-divider bg-surface p-2">
+        <img
+          src="/images/brett-chapin-headshot.png"
+          alt="Headshot of Brett Chapin"
+          class="aspect-[4/5] w-full object-cover"
+          width="1024"
+          height="1536"
+        />
+      </div>
+
+      <div class="prose-content">
+        <p class="font-mono text-sm text-accent">About</p>
+        <h1 class="mt-5 text-[2.5rem] font-semibold leading-tight text-text">Brett Chapin</h1>
+        <p class="mt-6 text-lg leading-8 text-muted">
+          I’m a software engineer with a strong focus on iOS development and a practical
+          full-stack background. Most of my work sits somewhere between product engineering,
+          systems thinking, and the day-to-day craft of keeping software understandable as it
+          grows.
+        </p>
+        <p>
+          I’ve been working professionally in software since 2017, with most of that time spent
+          building for Apple platforms using Swift, SwiftUI, and UIKit. I’ve also worked across
+          backend systems, APIs, Node.js, MongoDB, and the supporting pieces that make
+          applications reliable beyond the interface.
+        </p>
+
+        <h2>Professional Background</h2>
+        <p>
+          I currently work at Sweetwater, where technology supports a large music retail
+          business with a lot of moving parts. The work often involves practical engineering
+          tradeoffs: making features useful, keeping systems maintainable, and improving
+          workflows without adding unnecessary complexity.
+        </p>
+        <p>
+          I’m also a co-founder of MieTech, a small company and project space for building,
+          experimenting, and learning outside the boundaries of a single role. It gives me room
+          to explore ideas, sharpen my process, and build software with a long-term mindset.
+        </p>
+        <p>
+          Over time, I’ve learned to value the less flashy parts of engineering: clear
+          boundaries, readable code, stable workflows, good defaults, and decisions that still
+          make sense months later.
+        </p>
+
+        <h2>How I Think About Software</h2>
+        <p>
+          I prefer simple systems when simple systems are enough. Not because complexity is
+          always bad, but because every abstraction, dependency, and pattern asks to be
+          maintained. Good software is often the result of many small decisions made with care.
+        </p>
+        <p>
+          I’m interested in durable software: systems that can be changed without fear,
+          understood without archaeology, and improved without needing to rewrite everything.
+          That usually means paying attention to naming, boundaries, feedback loops, and the
+          boring details that quietly determine whether a codebase stays healthy.
+        </p>
+        <p>
+          I also care a lot about developer workflows and tooling. The way work moves through a
+          system affects the quality of the work itself. Better tools do not replace judgment,
+          but they can create more room for it.
+        </p>
+
+        <h2>Why This Blog Exists</h2>
+        <p>
+          This blog is a place for notes, not polished declarations. Some posts may be practical
+          walkthroughs. Others may be reflections on tradeoffs, workflows, AI-assisted
+          development, iOS patterns, side projects, or things I’m still figuring out.
+        </p>
+        <p>
+          It will not only be about technology. I’ll probably write about homesteading, things
+          I’m working on or learning, opinions I’m still shaping, and the parts of life that
+          influence how I think about work, responsibility, and growth.
+        </p>
+        <p>
+          I write to clarify my own thinking and to keep a record of what I’ve learned over
+          time. I’m not trying to position myself as an authority on every topic I write about.
+          I’m documenting the work, the questions, and the decisions that seem worth
+          remembering.
+        </p>
+
+        <h2>Personal Note</h2>
+        <p>
+          I enjoy learning slowly and building deliberately. I like projects that give me a
+          reason to understand something more deeply, even when the result is small. I’m less
+          interested in chasing novelty for its own sake and more interested in getting better
+          at the craft over time.
+        </p>
+        <p>
+          My faith is central to how I see the world. I’m a Bible-following Christian, and that
+          shapes how I think about character, stewardship, family, work, patience, and the kind
+          of person I’m trying to become.
+        </p>
+        <p>
+          The throughline is simple: keep learning, keep building, and leave things a little
+          clearer than they were before.
+        </p>
+      </div>
     </div>
   </section>
 
