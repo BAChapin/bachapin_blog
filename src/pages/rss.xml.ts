@@ -1,14 +1,15 @@
 import rss from '@astrojs/rss';
+import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { getPostSlug, getVisiblePosts } from '@/utils/posts';
 
-export async function GET(context) {
+export const GET: APIRoute = async (context) => {
   const posts = getVisiblePosts(await getCollection('blog')).filter((post) => !post.data.draft);
 
   return rss({
     title: 'Bachapin Blog',
     description: 'A quiet, technical blog about building thoughtful software.',
-    site: context.site,
+    site: context.site ?? new URL(import.meta.env.SITE_URL ?? 'https://example.com'),
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,
@@ -17,4 +18,4 @@ export async function GET(context) {
       categories: post.data.tags,
     })),
   });
-}
+};

@@ -30,9 +30,7 @@ content-first, static, fast, and intentionally small.
 │   │   └── SearchBox.astro
 │   ├── content/
 │   │   ├── blog/
-│   │   │   ├── draft-system-notes.mdx
-│   │   │   ├── first-principles-for-small-blogs.mdx
-│   │   │   └── static-search-with-pagefind.mdx
+│   │   │   └── .gitkeep
 │   ├── content.config.ts
 │   ├── layouts/
 │   │   ├── BaseLayout.astro

@@ -45,7 +45,13 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 
   <section class="border-t border-divider px-6 py-12 sm:px-8">
     <div class="grid gap-4">
-      {posts.map((post) => <BlogCard post={post} />)}
+      {posts.length > 0 ? (
+        posts.map((post) => <BlogCard post={post} />)
+      ) : (
+        <p class="border border-divider bg-surface p-6 text-muted">
+          No published posts yet. Check back after the first note is ready.
+        </p>
+      )}
     </div>
   </section>
 </BaseLayout>

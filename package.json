@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
-    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && pagefind --site dist",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build --force && pagefind --site dist",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "astro": "ASTRO_TELEMETRY_DISABLED=1 astro"
   },
@@ -19,6 +20,7 @@
     "tailwindcss": "^4.2.4"
   },
   "devDependencies": {
-    "typescript": "^6.0.3"
+    "@astrojs/check": "^0.9.8",
+    "typescript": "^5.9.3"
   }
 }

@@ -4,4 +4,4 @@ const websiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 const src = import.meta.env.PUBLIC_UMAMI_SRC ?? 'https://analytics.example.com/script.js';
 ---
 
-{enabled && websiteId && <script defer src={src} data-website-id={websiteId}></script>}
+{enabled && websiteId && <script is:inline defer src={src} data-website-id={websiteId}></script>}

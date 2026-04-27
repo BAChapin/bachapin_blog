@@ -41,7 +41,13 @@ const posts = getVisiblePosts(await getCollection('blog')).slice(0, 3);
       <a href="/blog" class="font-mono text-sm text-muted hover:text-accent">View all</a>
     </div>
     <div class="mt-8 grid gap-4">
-      {posts.map((post) => <BlogCard post={post} />)}
+      {posts.length > 0 ? (
+        posts.map((post) => <BlogCard post={post} />)
+      ) : (
+        <p class="border border-divider bg-surface p-6 text-muted">
+          No posts yet. The notebook is open; the first real entry is still taking shape.
+        </p>
+      )}
     </div>
   </section>
 

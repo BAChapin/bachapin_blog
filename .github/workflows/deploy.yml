@@ -1,0 +1,83 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy to DigitalOcean
+    runs-on: ubuntu-latest
+
+    env:
+      DEPLOY_PATH: ${{ secrets.DO_DEPLOY_PATH || '/opt/bachapin_blog' }}
+      RELEASE_ARCHIVE: bachapin-blog-${{ github.ref_name }}.tar.gz
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Astro project
+        run: npm run check
+
+      - name: Build static site
+        run: npm run build
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          PUBLIC_UMAMI_ENABLED: ${{ secrets.PUBLIC_UMAMI_ENABLED }}
+          PUBLIC_UMAMI_WEBSITE_ID: ${{ secrets.PUBLIC_UMAMI_WEBSITE_ID }}
+          PUBLIC_UMAMI_SRC: ${{ secrets.PUBLIC_UMAMI_SRC }}
+
+      - name: Package deployment bundle
+        run: |
+          mkdir -p release/infra
+          cp -R infra/. release/infra/
+          cp -R dist/. release/infra/data/
+          tar -czf "$RELEASE_ARCHIVE" -C release .
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          install -m 600 /dev/null ~/.ssh/deploy_key
+          printf '%s\n' "${{ secrets.DO_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.DO_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload deployment bundle
+        run: |
+          scp -i ~/.ssh/deploy_key "$RELEASE_ARCHIVE" \
+            "${{ secrets.DO_SSH_USER }}@${{ secrets.DO_HOST }}:/tmp/$RELEASE_ARCHIVE"
+
+      - name: Deploy on droplet
+        run: |
+          ssh -i ~/.ssh/deploy_key "${{ secrets.DO_SSH_USER }}@${{ secrets.DO_HOST }}" 'bash -s' << EOF
+            set -euo pipefail
+            mkdir -p "$DEPLOY_PATH"
+            tar -xzf "/tmp/$RELEASE_ARCHIVE" -C "$DEPLOY_PATH"
+            rm "/tmp/$RELEASE_ARCHIVE"
+
+            cd "$DEPLOY_PATH/infra"
+            if [ ! -f .env ]; then
+              echo "Missing $DEPLOY_PATH/infra/.env on the server."
+              echo "Create it from infra/.env.example before deploying."
+              exit 1
+            fi
+
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker compose exec -T nginx nginx -s reload || true
+          EOF

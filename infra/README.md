@@ -212,3 +212,97 @@ Umami is routed separately:
 ```txt
 http://analytics.example.com
 ```
+
+## GitHub Actions Deployment
+
+This repository includes a tag-triggered GitHub Actions workflow at
+`.github/workflows/deploy.yml`.
+
+The workflow runs when you push a tag matching `v*`, for example:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+It will:
+
+- Install dependencies with `npm ci`
+- Run `npm run check`
+- Run `npm run build`
+- Package `infra/` plus the generated Astro `dist/` output
+- Upload the bundle to your DigitalOcean droplet over SSH
+- Run `docker compose pull` and `docker compose up -d --remove-orphans`
+
+### Required GitHub Secrets
+
+Add these in GitHub under `Settings -> Secrets and variables -> Actions`:
+
+```txt
+DO_HOST
+DO_SSH_USER
+DO_SSH_PRIVATE_KEY
+SITE_URL
+PUBLIC_UMAMI_ENABLED
+PUBLIC_UMAMI_WEBSITE_ID
+PUBLIC_UMAMI_SRC
+```
+
+Optional:
+
+```txt
+DO_DEPLOY_PATH
+```
+
+If `DO_DEPLOY_PATH` is not set, the workflow deploys to:
+
+```txt
+/opt/bachapin_blog
+```
+
+### DigitalOcean Server Setup
+
+On the Ubuntu droplet:
+
+1. Make sure Docker and Docker Compose are installed.
+2. Create the deploy directory:
+
+```bash
+sudo mkdir -p /opt/bachapin_blog
+sudo chown -R "$USER":"$USER" /opt/bachapin_blog
+```
+
+3. Create the production environment file:
+
+```bash
+mkdir -p /opt/bachapin_blog/infra
+nano /opt/bachapin_blog/infra/.env
+```
+
+Use `infra/.env.example` as the template. Keep this `.env` file on the server only.
+
+4. Add a deploy SSH key:
+
+```bash
+mkdir -p ~/.ssh
+nano ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
+
+Put the public key that matches `DO_SSH_PRIVATE_KEY` into `authorized_keys`.
+
+5. Make sure the firewall allows HTTP and HTTPS:
+
+```bash
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+```
+
+### Notes
+
+- The workflow does not create or manage DigitalOcean droplets.
+- The workflow assumes a small VPS-style deployment where Docker Compose runs directly on the droplet.
+- Keep production secrets in GitHub Actions secrets and in the server-side `/opt/bachapin_blog/infra/.env`.
+- The server-side `.env` is intentionally not copied from the repository during deployment.
