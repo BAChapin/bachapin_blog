@@ -1,8 +1,5 @@
 ---
-// Future integration point:
-// Replace "#" with a provider endpoint from an environment variable such as
-// PUBLIC_NEWSLETTER_ACTION_URL when wiring Resend, Buttondown, ConvertKit, or another service.
-const newsletterAction = '#';
+const newsletterAction = 'https://buttondown.com/api/emails/embed-subscribe/chapin';
 ---
 
 <section class="border border-divider bg-surface p-6">
@@ -13,10 +10,14 @@ const newsletterAction = '#';
     engineering work more sustainable. No cadence promises, no funnel. Just useful notes when
     there is something worth writing down.
   </p>
-  <form class="mt-6 flex flex-col gap-3 sm:flex-row" action={newsletterAction} method="post">
-    <label class="sr-only" for="email">Email address</label>
+  <form
+    class="embeddable-buttondown-form mt-6 flex flex-col gap-3 sm:flex-row"
+    action={newsletterAction}
+    method="post"
+  >
+    <label class="sr-only" for="bd-email">Email address</label>
     <input
-      id="email"
+      id="bd-email"
       name="email"
       type="email"
       placeholder="you@example.com"
