@@ -7,13 +7,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    env_file:
-      - path: .env
-        required: false
     environment:
       DOMAIN: ${DOMAIN}
       UMAMI_DOMAIN: ${UMAMI_DOMAIN}
-      NGINX_ENVSUBST_TEMPLATE_SUFFIX: ".conf"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/templates:ro

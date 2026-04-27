@@ -20,8 +20,8 @@ infra/
 ├── nginx/
 │   ├── nginx.conf
 │   └── conf.d/
-│       ├── blog.conf
-│       └── umami.conf
+│       ├── blog.conf.template
+│       └── umami.conf.template
 └── data/
     └── .gitkeep
 ```
