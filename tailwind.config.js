@@ -8,7 +8,7 @@ export default {
         surface: '#111111',
         text: '#EAEAEA',
         muted: '#888888',
-        accent: '#00FF9C',
+        accent: '#FB9100',
         divider: '#1F1F1F',
       },
       fontFamily: {

@@ -35,7 +35,7 @@
 | Surface           | `#111111`    | Cards / containers |
 | Primary Text      | `#EAEAEA`    | Main content |
 | Secondary Text    | `#888888`    | Metadata / subtle text |
-| Accent            | `#00FF9C`    | Links, hover, highlights |
+| Accent            | `#FB9100`    | Links, hover, highlights |
 | Divider           | `#1F1F1F`    | Borders, separators |
 
 ### Rules
@@ -215,7 +215,7 @@ Structure:
 
 ### Allowed
 
-- Accent green highlights
+- Accent orange highlights
 - Occasional monospace usage
 - Terminal-like spacing
 
