@@ -217,6 +217,31 @@ SITE_URL=https://your-domain.com
 
 Astro uses `SITE_URL` for canonical URLs, Open Graph images, RSS, and sitemap output.
 
+## Newsletter
+
+Newsletter signups are handled by Buttondown through the existing styled form in
+`src/components/NewsletterSignup.astro`.
+
+The form posts to:
+
+```txt
+https://buttondown.com/api/emails/embed-subscribe/chapin
+```
+
+The local success page is:
+
+```txt
+/newsletter/success/
+```
+
+In Buttondown, set the newsletter's subscription redirect URL to:
+
+```txt
+https://bachapin.me/newsletter/success/
+```
+
+If double opt-in is enabled, Buttondown may still ask the subscriber to confirm by email.
+
 ## Docker
 
 Build and serve the static site with nginx:

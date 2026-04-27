@@ -1,0 +1,34 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Newsletter Signup Confirmed | Bachapin Blog"
+  description="Thanks for subscribing to Brett Chapin's notes from the workbench."
+>
+  <section class="px-6 py-16 sm:px-8 sm:py-24">
+    <div class="max-w-prose">
+      <p class="font-mono text-sm text-accent">Newsletter</p>
+      <h1 class="mt-5 text-[2.5rem] font-semibold leading-tight text-text">
+        Thanks for signing up.
+      </h1>
+      <p class="mt-6 text-lg leading-8 text-muted">
+        You’re on the list. I’ll send notes when there is something useful to share: software,
+        systems, faith, homesteading, learning, and the workbench odds and ends that are worth
+        writing down.
+      </p>
+      <p class="mt-6 text-muted">
+        If Buttondown asks you to confirm your email, check your inbox and follow that link to
+        finish subscribing.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/blog" class="border border-divider px-4 py-2 font-mono text-sm hover:border-accent hover:text-accent">
+          Read the blog
+        </a>
+        <a href="/" class="border border-divider px-4 py-2 font-mono text-sm hover:border-accent hover:text-accent">
+          Back home
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
