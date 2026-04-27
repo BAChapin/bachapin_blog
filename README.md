@@ -234,8 +234,117 @@ docker compose up
 
 ## Deployment
 
-Deploy the generated `dist` directory to any static host. Good fits include Netlify,
-Cloudflare Pages, Vercel, S3, or the provided Docker image.
+This project is set up for a small VPS deployment on DigitalOcean using Docker Compose.
+The deployment workflow lives at `.github/workflows/deploy.yml` and runs when a Git tag
+matching `v*` is pushed.
 
-Before production, set `SITE_URL` to the final domain so RSS, sitemap, canonical URLs,
-and social images are correct.
+### First Server Setup
+
+Before GitHub Actions can deploy, bootstrap the droplet once:
+
+1. Create an Ubuntu droplet in DigitalOcean.
+2. Point DNS at the droplet:
+   - `bachapin.me` -> droplet IP
+   - `analytics.bachapin.me` -> droplet IP
+3. Install Docker and Docker Compose on the droplet.
+4. Create the deployment directory:
+
+```bash
+sudo mkdir -p /opt/bachapin_blog/infra
+sudo chown -R "$USER":"$USER" /opt/bachapin_blog
+```
+
+5. Create the production infra environment file:
+
+```bash
+nano /opt/bachapin_blog/infra/.env
+```
+
+Use `infra/.env.example` as the template. This file stays on the server and should not be
+committed.
+
+### GitHub Actions Secrets
+
+Add these at:
+
+```txt
+GitHub repo -> Settings -> Secrets and variables -> Actions -> Repository secrets
+```
+
+Required:
+
+```txt
+DO_HOST
+DO_SSH_USER
+DO_SSH_PRIVATE_KEY
+SITE_URL
+PUBLIC_UMAMI_ENABLED
+PUBLIC_UMAMI_WEBSITE_ID
+PUBLIC_UMAMI_SRC
+```
+
+Optional:
+
+```txt
+DO_DEPLOY_PATH
+```
+
+Use `/opt/bachapin_blog` for `DO_DEPLOY_PATH`, or omit it to use the workflow default.
+
+For the first deploy, set:
+
+```txt
+SITE_URL=https://bachapin.me
+PUBLIC_UMAMI_ENABLED=false
+PUBLIC_UMAMI_WEBSITE_ID=
+PUBLIC_UMAMI_SRC=https://analytics.bachapin.me/script.js
+```
+
+After Umami is running, log into `https://analytics.bachapin.me`, create a website for
+`bachapin.me`, copy the generated website ID, and update:
+
+```txt
+PUBLIC_UMAMI_ENABLED=true
+PUBLIC_UMAMI_WEBSITE_ID=<copied-from-umami>
+```
+
+Then deploy again with a new tag.
+
+### Deploy With a Tag
+
+Create and push a version tag:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+The workflow will:
+
+- Install dependencies with `npm ci`
+- Run `npm run check`
+- Run `npm run build`
+- Package the Docker infra and static Astro output
+- Upload the bundle to the DigitalOcean droplet
+- Run `docker compose up -d --remove-orphans`
+
+### Manual Static Deploy
+
+If you need to deploy manually, build the site and copy `dist` into the NGINX static
+directory:
+
+```bash
+npm run build
+cp -R dist/. infra/data/
+```
+
+Then from the server:
+
+```bash
+cd /opt/bachapin_blog/infra
+docker compose up -d
+docker compose exec nginx nginx -s reload
+```
+
+See `infra/README.md` for the full infrastructure notes, including DNS, SSL, logs, and
+Postgres backup commands.
