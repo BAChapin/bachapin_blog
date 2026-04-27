@@ -18,8 +18,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/templates:ro
       - ./data:/usr/share/nginx/html:ro
-      # Mount Let's Encrypt certificates here later, for example:
-      # - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - proxy
 

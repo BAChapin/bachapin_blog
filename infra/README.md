@@ -142,40 +142,37 @@ Value: example.com
 TTL: Default
 ```
 
-## Local HTTP Testing
+## HTTPS
 
-The provided NGINX configs listen on HTTP port `80` by default so you can test before adding certificates.
-
-To test locally without public DNS, add temporary entries to your local `/etc/hosts` file:
+The NGINX configs are production HTTPS configs. Port `80` redirects to `443`, and NGINX
+expects Let's Encrypt certificates to exist on the droplet at:
 
 ```txt
-127.0.0.1 example.com
-127.0.0.1 analytics.example.com
+/etc/letsencrypt/live/bachapin.me/fullchain.pem
+/etc/letsencrypt/live/bachapin.me/privkey.pem
+
+/etc/letsencrypt/live/analytics.bachapin.me/fullchain.pem
+/etc/letsencrypt/live/analytics.bachapin.me/privkey.pem
 ```
 
-Then visit:
+The compose file mounts the host certificate directory into the NGINX container:
 
-- `http://example.com`
-- `http://analytics.example.com`
+```yaml
+- /etc/letsencrypt:/etc/letsencrypt:ro
+```
 
-## Adding SSL Later
+If you need to request certificates before the stack is running, use Certbot standalone on
+the droplet:
 
-The NGINX config files include commented HTTPS server blocks. A common Ubuntu setup is:
+```bash
+sudo certbot certonly --standalone -d bachapin.me
+sudo certbot certonly --standalone -d analytics.bachapin.me
+```
 
-1. Install Certbot on the host.
-2. Issue certificates for both domains.
-3. Mount `/etc/letsencrypt` into the NGINX container as read-only.
-4. Uncomment the HTTPS server blocks in `nginx/conf.d/blog.conf` and `nginx/conf.d/umami.conf`.
-5. Reload NGINX:
+After renewing certificates, reload NGINX:
 
 ```bash
 docker compose exec nginx nginx -s reload
-```
-
-The compose file already includes a commented example for the certificate mount:
-
-```yaml
-# - /etc/letsencrypt:/etc/letsencrypt:ro
 ```
 
 ## Deploying Astro Static Output
