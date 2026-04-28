@@ -45,6 +45,10 @@ jobs:
           PUBLIC_UMAMI_ENABLED: ${{ secrets.PUBLIC_UMAMI_ENABLED }}
           PUBLIC_UMAMI_WEBSITE_ID: ${{ secrets.PUBLIC_UMAMI_WEBSITE_ID }}
           PUBLIC_UMAMI_SRC: ${{ secrets.PUBLIC_UMAMI_SRC }}
+          PUBLIC_ADSENSE_ENABLED: ${{ secrets.PUBLIC_ADSENSE_ENABLED }}
+          PUBLIC_ADSENSE_CLIENT: ${{ secrets.PUBLIC_ADSENSE_CLIENT }}
+          PUBLIC_ADSENSE_BLOG_TOP_SLOT: ${{ secrets.PUBLIC_ADSENSE_BLOG_TOP_SLOT }}
+          PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT: ${{ secrets.PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT }}
 
       - name: Package deployment bundle
         run: |
