@@ -1,0 +1,209 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  estimateReadingMinutes,
+  formatDate,
+  getPostSlug,
+  getPostWordCount,
+  getVisiblePosts,
+} from '@/utils/posts';
+import { getCollection } from 'astro:content';
+
+const posts = getVisiblePosts(await getCollection('blog'));
+const postsWithStats = posts.map((post) => {
+  const wordCount = getPostWordCount(post);
+
+  return {
+    post,
+    slug: getPostSlug(post),
+    wordCount,
+    readingMinutes: estimateReadingMinutes(wordCount),
+  };
+});
+
+const totalPosts = postsWithStats.length;
+const totalWords = postsWithStats.reduce((sum, post) => sum + post.wordCount, 0);
+const averageWords = totalPosts > 0 ? Math.round(totalWords / totalPosts) : 0;
+const totalReadingMinutes = postsWithStats.reduce((sum, post) => sum + post.readingMinutes, 0);
+const averageReadingMinutes = totalPosts > 0 ? Math.round(totalReadingMinutes / totalPosts) : 0;
+const tagCounts = postsWithStats
+  .flatMap(({ post }) => post.data.tags)
+  .reduce<Map<string, number>>((counts, tag) => {
+    counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    return counts;
+  }, new Map());
+const topTags = [...tagCounts.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .slice(0, 6);
+const longestPost = [...postsWithStats].sort((a, b) => b.wordCount - a.wordCount)[0];
+const shortestPost = [...postsWithStats].sort((a, b) => a.wordCount - b.wordCount)[0];
+const firstPost = postsWithStats.at(-1);
+const latestPost = postsWithStats[0];
+const showShortestPost = totalPosts > 1 && shortestPost;
+
+const numberFormatter = new Intl.NumberFormat('en');
+const formatNumber = (value: number) => numberFormatter.format(value);
+const statCards = [
+  {
+    label: 'Published posts',
+    value: formatNumber(totalPosts),
+    detail: latestPost ? `Latest: ${formatDate(latestPost.post.data.pubDate)}` : 'No posts yet',
+  },
+  {
+    label: 'Total words',
+    value: formatNumber(totalWords),
+    detail: `${formatNumber(totalReadingMinutes)} min estimated total reading time`,
+  },
+  {
+    label: 'Average words',
+    value: formatNumber(averageWords),
+    detail: `${formatNumber(averageReadingMinutes)} min average read`,
+  },
+  {
+    label: 'Tag count',
+    value: formatNumber(tagCounts.size),
+    detail: topTags.length > 0 ? `${topTags[0][0]} leads with ${topTags[0][1]}` : 'No tags yet',
+  },
+];
+---
+
+<BaseLayout
+  title="Stats | Bachapin Blog"
+  description="Publishing statistics for Bachapin Blog, including post counts, word counts, reading time, and tag usage."
+>
+  <section class="px-6 py-16 sm:px-8 sm:py-20">
+    <div class="max-w-prose">
+      <p class="font-mono text-sm text-accent">Stats</p>
+      <h1 class="mt-5 text-[2.5rem] font-semibold leading-tight text-text">
+        Blog by the numbers
+      </h1>
+      <p class="mt-6 text-lg leading-8 text-muted">
+        A small, build-time snapshot of the notebook: how much has been published, how long it
+        takes to read, and which subjects keep showing up.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-t border-divider px-6 py-12 sm:px-8">
+    <div class="grid gap-4 sm:grid-cols-2">
+      {
+        statCards.map((stat) => (
+          <article class="border border-divider bg-surface p-6">
+            <p class="font-mono text-sm text-muted">{stat.label}</p>
+            <p class="mt-3 font-serif text-4xl font-semibold leading-none text-text">
+              {stat.value}
+            </p>
+            <p class="mt-4 text-sm leading-6 text-muted">{stat.detail}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  {(longestPost || showShortestPost || firstPost) && (
+    <section class="border-t border-divider px-6 py-12 sm:px-8">
+      <div class="grid gap-8 md:grid-cols-3">
+        {longestPost && (
+          <div>
+            <p class="font-mono text-sm text-muted">Longest post</p>
+            <a
+              href={`/blog/${longestPost.slug}`}
+              class="mt-3 block text-xl font-semibold text-text hover:text-accent"
+            >
+              {longestPost.post.data.title}
+            </a>
+            <p class="mt-2 text-sm text-muted">
+              {formatNumber(longestPost.wordCount)} words
+            </p>
+          </div>
+        )}
+
+        {showShortestPost && (
+          <div>
+            <p class="font-mono text-sm text-muted">Shortest post</p>
+            <a
+              href={`/blog/${shortestPost.slug}`}
+              class="mt-3 block text-xl font-semibold text-text hover:text-accent"
+            >
+              {shortestPost.post.data.title}
+            </a>
+            <p class="mt-2 text-sm text-muted">
+              {formatNumber(shortestPost.wordCount)} words
+            </p>
+          </div>
+        )}
+
+        {firstPost && (
+          <div>
+            <p class="font-mono text-sm text-muted">First published</p>
+            <a
+              href={`/blog/${firstPost.slug}`}
+              class="mt-3 block text-xl font-semibold text-text hover:text-accent"
+            >
+              {firstPost.post.data.title}
+            </a>
+            <p class="mt-2 text-sm text-muted">
+              {formatDate(firstPost.post.data.pubDate)}
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  <section class="border-t border-divider px-6 py-12 sm:px-8">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="font-mono text-sm text-muted">Post breakdown</p>
+        <h2 class="mt-2 text-3xl font-semibold text-text">Words per post</h2>
+      </div>
+      <p class="font-mono text-sm text-muted">{formatNumber(totalWords)} total words</p>
+    </div>
+
+    <div class="mt-8 grid gap-3">
+      {
+        postsWithStats.length > 0 ? (
+          postsWithStats.map(({ post, slug, wordCount, readingMinutes }) => {
+            const width = totalWords > 0 ? `${Math.max(8, (wordCount / totalWords) * 100)}%` : '8%';
+
+            return (
+              <article class="border border-divider bg-surface p-5">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+                  <a href={`/blog/${slug}`} class="font-semibold text-text hover:text-accent">
+                    {post.data.title}
+                  </a>
+                  <p class="font-mono text-sm text-muted">
+                    {formatNumber(wordCount)} words / {formatNumber(readingMinutes)} min
+                  </p>
+                </div>
+                <div class="mt-4 h-1.5 bg-ink" aria-hidden="true">
+                  <div class="h-full bg-accent" style={{ width }} />
+                </div>
+              </article>
+            );
+          })
+        ) : (
+          <p class="border border-divider bg-surface p-6 text-muted">
+            No published posts yet. The stats page will fill in as the archive grows.
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  {topTags.length > 0 && (
+    <section class="border-t border-divider px-6 py-12 sm:px-8">
+      <p class="font-mono text-sm text-muted">Recurring topics</p>
+      <div class="mt-4 flex flex-wrap gap-2" aria-label="Top tags">
+        {topTags.map(([tag, count]) => (
+          <a
+            href={`/blog?tag=${encodeURIComponent(tag)}`}
+            class="border border-divider px-3 py-1 font-mono text-sm text-muted hover:border-accent hover:text-accent"
+          >
+            #{tag} / {count}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>
