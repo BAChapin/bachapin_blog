@@ -1,5 +1,6 @@
 ---
 import AdSenseAd from '@/components/AdSenseAd.astro';
+import BlogViewCounter from '@/components/BlogViewCounter.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { formatDate, getPostSlug, type BlogPost } from '@/utils/posts';
 
@@ -30,6 +31,8 @@ const bottomAdSlot = import.meta.env.PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT;
         <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
         <span aria-hidden="true">/</span>
         <span>{readingTime}</span>
+        <span aria-hidden="true">/</span>
+        <BlogViewCounter slug={slug} />
         {updatedDate && (
           <>
             <span aria-hidden="true">/</span>

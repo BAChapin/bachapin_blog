@@ -302,6 +302,24 @@ PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT=<bottom-ad-slot-id>
 If you ever decide to use Auto ads instead, keep the manual slots disabled first and test
 the reading experience before leaving both systems enabled together.
 
+## Blog View Counter
+
+Blog posts display a muted live view count in the article metadata row. The browser calls
+the internal `/api/views/<slug>` endpoint, which is proxied by NGINX to the
+`view-counter` Docker service.
+
+The counter service stores totals in the `view_counter_data` Docker volume and deduplicates
+repeat views from the same visitor fingerprint for six hours by default. The browser also
+uses local storage for the same six-hour window so refreshes do not inflate counts during
+normal reading.
+
+Production tuning lives in `infra/.env`:
+
+```bash
+VIEW_COUNTER_DEDUPE_TTL_SECONDS=21600
+VIEW_COUNTER_HASH_SALT=<long-random-string>
+```
+
 ## Docker
 
 Build and serve the static site with nginx:

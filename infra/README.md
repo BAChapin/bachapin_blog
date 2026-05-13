@@ -5,10 +5,12 @@ Simple Docker Compose infrastructure for a personal Astro blog and self-hosted U
 ## Services
 
 - `nginx`: public reverse proxy on ports `80` and `443`
+- `view-counter`: internal post view counter API
 - `umami`: internal Umami analytics app on Docker networking only
 - `postgres`: private PostgreSQL database for Umami
 
-Postgres is not exposed publicly. Umami is not published directly to the host; all public traffic goes through NGINX.
+Postgres is not exposed publicly. Umami and the view counter are not published directly
+to the host; all public traffic goes through NGINX.
 
 ## Directory Layout
 
@@ -47,6 +49,9 @@ UMAMI_APP_SECRET=change_me_to_long_random_string
 
 DOMAIN=example.com
 UMAMI_DOMAIN=analytics.example.com
+
+VIEW_COUNTER_DEDUPE_TTL_SECONDS=21600
+VIEW_COUNTER_HASH_SALT=change_me_to_long_random_string
 ```
 
 Generate a strong Umami app secret:
@@ -203,6 +208,16 @@ The blog route is:
 ```txt
 http://example.com
 ```
+
+Blog post view counts are served from:
+
+```txt
+https://example.com/api/views/<post-slug>
+```
+
+The `view-counter` service persists totals in the `view_counter_data` Docker volume. The
+service and browser both use a six-hour dedupe window by default to reduce refresh-based
+count inflation.
 
 Umami is routed separately:
 

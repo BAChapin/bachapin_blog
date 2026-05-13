@@ -4,6 +4,7 @@ services:
     restart: unless-stopped
     depends_on:
       - umami
+      - view-counter
     ports:
       - "80:80"
       - "443:443"
@@ -15,6 +16,21 @@ services:
       - ./nginx/conf.d:/etc/nginx/templates:ro
       - ./data:/usr/share/nginx/html:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - proxy
+
+  view-counter:
+    build:
+      context: ./view-counter
+    restart: unless-stopped
+    environment:
+      VIEW_COUNTER_DATA_FILE: /data/views.json
+      VIEW_COUNTER_DEDUPE_TTL_SECONDS: ${VIEW_COUNTER_DEDUPE_TTL_SECONDS:-21600}
+      VIEW_COUNTER_HASH_SALT: ${VIEW_COUNTER_HASH_SALT:-bachapin-blog-view-counter}
+    expose:
+      - "3000"
+    volumes:
+      - view_counter_data:/data
     networks:
       - proxy
 
@@ -68,3 +84,4 @@ networks:
 
 volumes:
   postgres_data:
+  view_counter_data:

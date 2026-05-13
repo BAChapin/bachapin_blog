@@ -1,0 +1,94 @@
+---
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<span
+  class="blog-view-counter text-muted"
+  data-view-counter
+  data-slug={slug}
+  aria-live="polite"
+>
+  Views loading
+</span>
+
+<script>
+  const viewCounterElements = document.querySelectorAll('[data-view-counter]');
+  const viewWindowMs = 6 * 60 * 60 * 1000;
+
+  function formatViewCount(count: number) {
+    if (count >= 10000) {
+      return `${(count / 1000).toFixed(1)} k`;
+    }
+
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(2)} k`;
+    }
+
+    return count.toLocaleString('en');
+  }
+
+  function renderViewText(element: Element, count: number) {
+    const formatted = formatViewCount(count);
+    element.textContent = `${formatted} ${count === 1 ? 'view' : 'views'}`;
+  }
+
+  function getLastViewedAt(storageKey: string) {
+    try {
+      return Number(window.localStorage.getItem(storageKey) ?? 0);
+    } catch {
+      return 0;
+    }
+  }
+
+  function setLastViewedAt(storageKey: string) {
+    try {
+      window.localStorage.setItem(storageKey, String(Date.now()));
+    } catch {
+      // The server-side dedupe window still protects the counter when storage is unavailable.
+    }
+  }
+
+  async function updateViewCounter(element: Element) {
+    const slug = element.getAttribute('data-slug');
+    if (!slug) return;
+
+    const endpoint = `/api/views/${encodeURIComponent(slug)}`;
+    const storageKey = `bachapin:viewed:${slug}`;
+    const lastViewedAt = getLastViewedAt(storageKey);
+    const shouldIncrement = Date.now() - lastViewedAt > viewWindowMs;
+    const method = shouldIncrement ? 'POST' : 'GET';
+
+    try {
+      const response = await fetch(endpoint, {
+        method,
+        headers: {
+          Accept: 'application/json',
+        },
+        keepalive: method === 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error(`View counter returned ${response.status}`);
+      }
+
+      const data = await response.json();
+      const count = Number(data.count ?? 0);
+
+      if (method === 'POST') {
+        setLastViewedAt(storageKey);
+      }
+
+      renderViewText(element, count);
+    } catch {
+      element.textContent = 'Views unavailable';
+    }
+  }
+
+  viewCounterElements.forEach((element) => {
+    updateViewCounter(element);
+  });
+</script>
