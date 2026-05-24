@@ -317,6 +317,13 @@ Run local development through Compose:
 docker compose up
 ```
 
+### Caching
+
+The production NGINX config asks browsers to revalidate HTML pages on each visit with
+`Cache-Control: no-cache`, so newly deployed posts and archive pages show up without a hard
+refresh. Fingerprinted static assets such as CSS, JavaScript, images, and fonts keep the
+long-lived immutable cache policy in `infra/nginx/conf.d/blog.conf.template`.
+
 ## Deployment
 
 This project is set up for a small VPS deployment on DigitalOcean using Docker Compose.

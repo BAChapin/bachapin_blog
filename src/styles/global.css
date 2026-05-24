@@ -146,6 +146,10 @@
     padding-left: 16px;
   }
 
+  .prose-content img {
+    border-radius: 6px;
+  }
+
   .prose-content code {
     border: 1px solid #1F1F1F;
     border-radius: 4px;
