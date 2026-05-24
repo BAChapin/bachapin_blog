@@ -8,12 +8,34 @@
 
 <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
 <script is:inline>
+  const loadPagefindUI = () => {
+    if (window.PagefindUI) return Promise.resolve(window.PagefindUI);
+
+    if (window.__pagefindUILoading) return window.__pagefindUILoading;
+
+    window.__pagefindUILoading = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = '/pagefind/pagefind-ui.js';
+      script.onload = () => {
+        if (window.PagefindUI) {
+          resolve(window.PagefindUI);
+        } else {
+          reject(new Error('Pagefind UI loaded without exposing window.PagefindUI.'));
+        }
+      };
+      script.onerror = () => reject(new Error('Pagefind UI script failed to load.'));
+      document.head.appendChild(script);
+    });
+
+    return window.__pagefindUILoading;
+  };
+
   const mountSearch = async () => {
     const target = document.querySelector('#search');
     if (!target) return;
 
     try {
-      const { PagefindUI } = await import('/pagefind/pagefind-ui.js');
+      const PagefindUI = await loadPagefindUI();
       new PagefindUI({
         element: '#search',
         showSubResults: true,
