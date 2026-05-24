@@ -1,5 +1,4 @@
 ---
-import AdSenseAd from '@/components/AdSenseAd.astro';
 import BlogViewCounter from '@/components/BlogViewCounter.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { formatDate, getPostSlug, type BlogPost } from '@/utils/posts';
@@ -17,8 +16,6 @@ const analyticsPayload = {
   title,
   tags,
 };
-const topAdSlot = import.meta.env.PUBLIC_ADSENSE_BLOG_TOP_SLOT;
-const bottomAdSlot = import.meta.env.PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT;
 ---
 
 <BaseLayout title={`${title} | Bachapin Blog`} description={description} image={image} ogType="article">
@@ -53,14 +50,9 @@ const bottomAdSlot = import.meta.env.PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT;
         </div>
       )}
     </header>
-
-    <AdSenseAd slot={topAdSlot} class="mx-auto mt-10 max-w-prose" />
-
     <div class="prose-content mx-auto mt-12">
       <slot />
     </div>
-
-    <AdSenseAd slot={bottomAdSlot} class="mx-auto mt-16 max-w-prose" />
 
     <footer class="mx-auto mt-16 max-w-prose border-t border-divider pt-8">
       <a href="/blog" class="font-mono text-sm text-muted hover:text-accent">

@@ -24,7 +24,6 @@ content-first, static, fast, and intentionally small.
 │       └── post-placeholder.svg
 ├── src/
 │   ├── components/
-│   │   ├── AdSenseAd.astro
 │   │   ├── AdSenseScript.astro
 │   │   ├── BlogCard.astro
 │   │   ├── Footer.astro
@@ -230,8 +229,6 @@ PUBLIC_UMAMI_SRC=https://analytics.example.com/script.js
 
 PUBLIC_ADSENSE_ENABLED=false
 PUBLIC_ADSENSE_CLIENT=ca-pub-2892923928204043
-PUBLIC_ADSENSE_BLOG_TOP_SLOT=
-PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT=
 ```
 
 These values are public in the rendered HTML when enabled. Keep private service secrets
@@ -264,17 +261,10 @@ If double opt-in is enabled, Buttondown may still ask the subscriber to confirm 
 
 ## AdSense
 
-Google AdSense is wired for restrained manual ad units on blog posts only. The global
-AdSense script is loaded by `src/components/AdSenseScript.astro`, and the post placements
-use `src/components/AdSenseAd.astro`.
-
-The current placements are:
-
-- One responsive ad after the article header
-- One responsive ad after the article body
-
-Ads render only when all required values are present and `PUBLIC_ADSENSE_ENABLED=true`.
-This keeps local development and preview builds clean by default.
+Google AdSense is wired through the global AdSense script in
+`src/components/AdSenseScript.astro`. The script loads only when
+`PUBLIC_ADSENSE_ENABLED=true` and `PUBLIC_ADSENSE_CLIENT` is present, which keeps local
+development and preview builds clean by default.
 
 The required `ads.txt` file lives at `public/ads.txt` and deploys to:
 
@@ -284,23 +274,15 @@ https://bachapin.me/ads.txt
 
 To enable ads in production:
 
-1. In Google AdSense, create responsive display ad units for:
-   - `Blog post top`
-   - `Blog post bottom`
-2. Copy each ad unit's slot ID.
-3. Add these GitHub Actions repository secrets:
+1. Finish the site setup in Google AdSense.
+2. Add these GitHub Actions repository secrets:
 
 ```txt
 PUBLIC_ADSENSE_ENABLED=true
 PUBLIC_ADSENSE_CLIENT=ca-pub-2892923928204043
-PUBLIC_ADSENSE_BLOG_TOP_SLOT=<top-ad-slot-id>
-PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT=<bottom-ad-slot-id>
 ```
 
-4. Deploy with a new version tag.
-
-If you ever decide to use Auto ads instead, keep the manual slots disabled first and test
-the reading experience before leaving both systems enabled together.
+3. Deploy with a new version tag.
 
 ## Blog View Counter
 
@@ -386,8 +368,6 @@ PUBLIC_UMAMI_WEBSITE_ID
 PUBLIC_UMAMI_SRC
 PUBLIC_ADSENSE_ENABLED
 PUBLIC_ADSENSE_CLIENT
-PUBLIC_ADSENSE_BLOG_TOP_SLOT
-PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT
 ```
 
 Optional:
@@ -407,8 +387,6 @@ PUBLIC_UMAMI_WEBSITE_ID=
 PUBLIC_UMAMI_SRC=https://analytics.bachapin.me/script.js
 PUBLIC_ADSENSE_ENABLED=false
 PUBLIC_ADSENSE_CLIENT=ca-pub-2892923928204043
-PUBLIC_ADSENSE_BLOG_TOP_SLOT=
-PUBLIC_ADSENSE_BLOG_BOTTOM_SLOT=
 ```
 
 After Umami is running, log into `https://analytics.bachapin.me`, create a website for
