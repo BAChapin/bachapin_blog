@@ -35,6 +35,11 @@ const tagCounts = postsWithStats
 const topTags = [...tagCounts.entries()]
   .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
   .slice(0, 6);
+const topPostsByWordCount = [...postsWithStats]
+  .sort(
+    (a, b) => b.wordCount - a.wordCount || a.post.data.title.localeCompare(b.post.data.title),
+  )
+  .slice(0, 10);
 const longestPost = [...postsWithStats].sort((a, b) => b.wordCount - a.wordCount)[0];
 const shortestPost = [...postsWithStats].sort((a, b) => a.wordCount - b.wordCount)[0];
 const firstPost = postsWithStats.at(-1);
@@ -162,8 +167,8 @@ const statCards = [
 
     <div class="mt-8 grid gap-3">
       {
-        postsWithStats.length > 0 ? (
-          postsWithStats.map(({ post, slug, wordCount, readingMinutes }) => {
+        topPostsByWordCount.length > 0 ? (
+          topPostsByWordCount.map(({ post, slug, wordCount, readingMinutes }) => {
             const width = totalWords > 0 ? `${Math.max(8, (wordCount / totalWords) * 100)}%` : '8%';
 
             return (
