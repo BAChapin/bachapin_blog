@@ -113,7 +113,7 @@ Use a consistent spacing system:
 
 ### Links
 
-- Default: Primary text color
+- Default: Accent color
 - Hover: Accent color
 - Underline on hover only
 
